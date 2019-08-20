@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css?family=Karla|Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background: linear-gradient(315deg, #006a9a, #37093e);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(40px + 2vmin);
+  color: white;
+  font-family: Karla;
+}
+
+.Sub-header {
+  padding-top: 12px;
+  padding-bottom: 20px;
+  font-size: calc(10px + 2vmin);
+  color: #ededed;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.locationContainer {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.content {
+  padding-top: 100px;
+  font-family: Roboto;
+}
+
+.intro {
+  padding-bottom: 100px;
+  font-size: 40px;
+}

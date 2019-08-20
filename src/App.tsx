@@ -1,0 +1,59 @@
+import React from "react";
+import "./App.css";
+import LocationEntry from "./GeoCentroid/LocationEntry";
+import { observer } from "mobx-react";
+import Fab from "@material-ui/core/Fab";
+import Container from "react-bootstrap/Container";
+import SchoolSlider from "./Sliders/SchoolSlider";
+import { scroller } from "react-scroll";
+import { submit } from "./GeoCentroid/actions/locationEntryActions";
+import ResultList from "./GeoCentroid/ResultList";
+import getStore from "./GeoCentroid/store/store";
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        Welcome to Locale
+        <div className="Sub-header">find your perfect neighborhood</div>
+        <Fab
+          variant="extended"
+          style={{ color: "#aaaaaa" }}
+          size="large"
+          onClick={() => scrollTo()}
+        >
+          get started
+        </Fab>
+      </header>
+      <div className="content">
+        <div className="intro">
+          <p>
+            personalize the information below to discover the perfect
+            neighborhood for you
+          </p>
+        </div>
+        <Container className="locationContainer">
+          <LocationEntry />
+        </Container>
+        <Container className="sliderContainer">
+          <SchoolSlider />
+        </Container>
+        <Fab type="submit" onClick={submit}>
+          Submit
+        </Fab>
+        {getStore().submitted ? <ResultList /> : null}
+      </div>
+    </div>
+  );
+};
+
+function scrollTo(): void {
+  setTimeout(() => {
+    scroller.scrollTo("content", {
+      smooth: true,
+      duration: 800
+    });
+  }, 1);
+}
+
+export default observer(App);
