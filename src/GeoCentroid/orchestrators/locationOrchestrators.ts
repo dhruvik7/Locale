@@ -16,7 +16,7 @@ async function driver() {
   await geocodeHelper();
   centroidHelper();
   await closestZipCode();
-  //   await zipCodeList();
+  await zipCodeList();
 }
 
 orchestrator(geocode, actionMessage => {
