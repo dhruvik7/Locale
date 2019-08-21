@@ -79,7 +79,10 @@ async function zipCodeList() {
       ZIPCODE_KEY
     )
   );
-  console.log(response.data);
+  for (var index = 0; index < response.data.DataList.length; index++) {
+    setZipCode(response.data.DataList[index].Code);
+  }
+  console.log(getStore().zipCodes);
 }
 
 function URLify(str: string) {
