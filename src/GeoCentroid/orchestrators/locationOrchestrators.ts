@@ -10,9 +10,6 @@ import {
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
 
-const API_KEY = "abc";
-const ZIPCODE_KEY = "abc";
-
 async function driver() {
   await geocodeHelper();
   centroidHelper();
