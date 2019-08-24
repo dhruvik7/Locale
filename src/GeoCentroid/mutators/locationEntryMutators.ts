@@ -6,7 +6,9 @@ import {
   submit,
   submitAddresses,
   setCentroid,
-  setZipCode
+  setZipCode,
+  removeInvalidZipCode,
+  addData
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
 // import { geocode } from "../services/geocoding";
@@ -57,3 +59,22 @@ mutator(setCentroid, actionMessage => {
 mutator(setZipCode, actionMessage => {
   getStore().zipCodes.push(actionMessage.zipcode);
 });
+
+mutator(removeInvalidZipCode, actionMessage => {
+  getStore().zipCodes.splice(actionMessage.index, 1);
+});
+
+mutator(addData, actionMessage => {
+  getStore().datum.push(actionMessage.data);
+  console.log(Object.keys(actionMessage.data));
+  console.log(getRanking([12, 1.3, 4, 37, 98, 123.4]));
+});
+
+function getRanking(vals: number[]): number[] {
+  const sorted = vals.slice().sort(function(a, b) {
+    return a - b;
+  });
+  return vals.map(function(val) {
+    return sorted.indexOf(val) + 1;
+  });
+}

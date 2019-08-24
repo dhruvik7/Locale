@@ -13,3 +13,8 @@ export let submit = action("submit");
 export let geocode = action("geocode");
 export let setCentroid = action("setCentroid", center => ({ center }));
 export let setZipCode = action("setZipCode", zipcode => ({ zipcode }));
+export let removeInvalidZipCode = action("removeInvalidZipCode", index => ({
+  index
+}));
+
+export let addData = action("addData", data => ({ data }));

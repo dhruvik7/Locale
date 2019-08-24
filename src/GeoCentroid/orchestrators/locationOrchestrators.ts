@@ -5,16 +5,22 @@ import {
   submitAddresses,
   geocode,
   setCentroid,
-  setZipCode
+  setZipCode,
+  removeInvalidZipCode,
+  addData
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
+import db from "../../../firebase";
+import { API_KEY, ZIPCODE_KEY } from "../../../api";
 
 async function driver() {
   await geocodeHelper();
   centroidHelper();
   await closestZipCode();
   await zipCodeList();
+  await addZipCodeData();
+  console.log(getStore().datum);
 }
 
 orchestrator(geocode, actionMessage => {
@@ -62,7 +68,6 @@ async function closestZipCode() {
   for (var i in components) {
     if (components[i].types[0] === "postal_code") {
       setZipCode(components[i].short_name);
-      console.log(getStore().zipCodes);
       return;
     }
   }
@@ -80,9 +85,25 @@ async function zipCodeList() {
   for (var index = 0; index < response.data.DataList.length; index++) {
     setZipCode(response.data.DataList[index].Code);
   }
-  console.log(getStore().zipCodes);
 }
 
 function URLify(str: string) {
   return str.trim().replace(/\s/g, "%20");
+}
+
+async function addZipCodeData() {
+  for (var i = 0; i < getStore().zipCodes.length - 1; i++) {
+    await db
+      .collection("zipcode_data")
+      .doc(getStore().zipCodes[i])
+      .get()
+      .then(doc => {
+        if (doc.data()) {
+          addData(doc.data());
+        } else {
+          removeInvalidZipCode(i);
+          i--;
+        }
+      });
+  }
 }

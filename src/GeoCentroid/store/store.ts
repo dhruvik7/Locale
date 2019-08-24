@@ -11,10 +11,10 @@ interface LocationEntryStore {
   sliderNum: number;
   coordinates: Coordinate[];
   submitted: boolean;
-  tempLat: number;
-  tempLon: number;
   centroid: { latitude: number; longitude: number };
   zipCodes: string[];
+  zipDataBase: string[][];
+  datum: object[];
 }
 
 const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
@@ -24,10 +24,10 @@ const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
   sliderNum: 50,
   coordinates: [],
   submitted: false,
-  tempLat: 0,
-  tempLon: 0,
   centroid: { latitude: 0, longitude: 0 },
-  zipCodes: []
+  zipCodes: [],
+  zipDataBase: [],
+  datum: []
 });
 
 export default getStore;
