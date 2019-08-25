@@ -5,7 +5,7 @@ interface SliderStore {
 }
 
 const getStore = createStore<SliderStore>("SliderStore", {
-  sliderNums: [50, 50]
+  sliderNums: [0, 0, 0, 0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50]
 });
 
 export default getStore;

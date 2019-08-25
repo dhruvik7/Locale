@@ -7,11 +7,12 @@ import {
   submitAddresses,
   setCentroid,
   setZipCode,
-  removeInvalidZipCode,
   addData,
-  formRankedMatrix
+  formRankedMatrix,
+  computeRanking
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
+import { getSliderState } from "../../Sliders/selectors/sliderSelectors";
 
 mutator(addNewAddress, () => {
   if (
@@ -60,14 +61,9 @@ mutator(setZipCode, actionMessage => {
   getStore().zipCodes.push(actionMessage.zipcode);
 });
 
-mutator(removeInvalidZipCode, actionMessage => {
-  getStore().zipCodes.splice(actionMessage.index, 1);
-});
-
 mutator(addData, actionMessage => {
-  // const num: number[] = Object.values(actionMessage.data);
-  // getStore().datum.push(num.splice(num.length - 1, 1));
-  getStore().datum.push(Object.values(actionMessage.data));
+  getStore().datum.push(Object.values(actionMessage.data.data()));
+  getStore().valid_zipcodes.push(actionMessage.data.id);
 });
 
 mutator(formRankedMatrix, actionMessage => {
@@ -78,11 +74,12 @@ mutator(formRankedMatrix, actionMessage => {
     var raw_data = getStore().datum.map(function(value, index) {
       return value[i];
     });
-    temp.push(normalize(raw_data));
+    temp.push(getRanking(raw_data));
   }
   //making the rows into zipcodes again via transpose
   getStore().rankedData = temp[0].map((col, i) => temp.map(row => row[i]));
   console.log("done");
+  console.log(getStore().rankedData);
 });
 
 function getRanking(vals: number[]): number[] {
@@ -110,4 +107,22 @@ function normalize(vals: number[]): number[] {
     res.push((vals[j] - min) / (max - min));
   }
   return res;
+}
+
+mutator(computeRanking, actionMessage => {
+  getStore().finalScores = getStore().rankedData.map(zip =>
+    dotProduct(getSliderState(), zip)
+  );
+  console.log(getStore().finalScores);
+});
+
+function dotProduct(arr1: number[], arr2: number[]) {
+  var sum = 0;
+  console.log(arr2.length);
+  if (arr1.length === arr2.length) {
+    for (var i = 0, len = arr1.length; i < len; i++) {
+      sum += arr1[i] * arr2[i];
+    }
+  }
+  return sum;
 }

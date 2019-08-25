@@ -12,20 +12,20 @@ interface Coordinate {
 @observer
 class ResultList extends React.Component<{}> {
   async componentDidMount() {
-    geocode();
+    await geocode();
   }
 
   render() {
-    const formattedCoords = getStore().coordinates.map(coordinate => (
-      <li>
-        {coordinate.lat},{coordinate.lng}
-      </li>
-    ));
     return (
       <div>
-        {" "}
-        <ul>{formattedCoords}</ul>
-        {getStore().zipCodes.length > 0 ? getStore().zipCodes[0] : null}
+        <ul>
+          {getStore().valid_zipcodes.map(zip => (
+            <li>
+              {zip},{" "}
+              {getStore().finalScores[getStore().valid_zipcodes.indexOf(zip)]}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }

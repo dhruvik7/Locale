@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import Slider from "@material-ui/core/Slider";
 import { maintainSlider } from "./actions/sliderActions";
 import "./mutators/sliderMutators";
+import "./sliderStyles.css";
 
 export interface SliderEntryProps {
   lowEnd: string;
@@ -27,7 +28,7 @@ class SliderEntry extends React.Component<SliderEntryProps> {
       }
     ];
     return (
-      <div>
+      <div className="slider">
         <h1>{this.props.title}</h1>
         <h3>{this.props.desc}</h3>
         <Slider

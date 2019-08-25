@@ -6,9 +6,9 @@ import {
   geocode,
   setCentroid,
   setZipCode,
-  removeInvalidZipCode,
   addData,
-  formRankedMatrix
+  formRankedMatrix,
+  computeRanking
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
@@ -23,7 +23,8 @@ async function driver() {
   console.log("scoring");
   await addZipCodeData();
   console.log("added");
-  // computeScores();
+  formRankedMatrix();
+  computeRanking();
 }
 
 orchestrator(geocode, actionMessage => {
@@ -103,28 +104,32 @@ function URLify(str: string) {
 }
 
 async function addZipCodeData() {
-  // await db
-  //   .collection("tagged_zipcode_data")
-  //   .get()
-  //   .then(doc => {
-  //     console.log(doc);
-  //   });
-  await db
-    .collection("zipcode_data")
-    .get()
-    .then(snapshot => {
-      if (snapshot) {
-        snapshot.forEach(doc => {
-          if (getStore().zipCodes.includes(doc.id)) {
-            console.log(doc.data());
-            addData(doc.data());
+  if (getStore().zipCodes.length > 100) {
+    await db
+      .collection("zipcode_data")
+      .get()
+      .then(snapshot => {
+        if (snapshot) {
+          snapshot.forEach(doc => {
+            if (getStore().zipCodes.includes(doc.id)) {
+              addData(doc);
+            }
+          });
+        }
+      });
+  } else {
+    for (var i = 0, len = getStore().zipCodes.length; i < len; i++) {
+      await db
+        .collection("zipcode_data")
+        .doc(getStore().zipCodes[i])
+        .get()
+        .then(doc => {
+          if (doc.data()) {
+            addData(doc);
           }
         });
-      }
-    });
-  console.log(getStore().datum);
-}
+    }
+  }
 
-function computeScores() {
-  formRankedMatrix();
+  console.log(getStore().datum);
 }

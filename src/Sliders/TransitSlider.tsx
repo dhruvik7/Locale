@@ -4,19 +4,19 @@ import getStore from "./store/store";
 import { observer } from "mobx-react";
 
 @observer
-class SchoolSlider extends React.Component {
+class TransitSlider extends React.Component {
   render() {
     return (
       <SliderEntry
         lowEnd="not important"
         highEnd="very important"
-        title="schools"
-        desc="how important is it for you to live near a top public school district?"
-        value={getStore().sliderNums[12]}
-        index={12}
+        title="transportation"
+        desc="how important is it for you to have access to a good public transportation system?"
+        value={getStore().sliderNums[11]}
+        index={11}
       />
     );
   }
 }
 
-export default SchoolSlider;
+export default TransitSlider;

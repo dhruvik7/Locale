@@ -9,6 +9,12 @@ import { scroller } from "react-scroll";
 import { submit } from "./GeoCentroid/actions/locationEntryActions";
 import ResultList from "./GeoCentroid/ResultList";
 import getStore from "./GeoCentroid/store/store";
+import HousingSlider from "./Sliders/HousingSlider";
+import EducationSlider from "./Sliders/EducationSlider";
+import WalkingSlider from "./Sliders/WalkingSlider";
+import UrbanSlider from "./Sliders/UrbanSlider";
+import TransitSlider from "./Sliders/TransitSlider";
+import FamilySlider from "./Sliders/FamilySlider";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +43,12 @@ const App: React.FC = () => {
         </Container>
         <Container className="sliderContainer">
           <SchoolSlider />
+          <HousingSlider />
+          <EducationSlider />
+          <WalkingSlider />
+          <UrbanSlider />
+          <TransitSlider />
+          <FamilySlider />
         </Container>
         <Fab type="submit" onClick={submit}>
           Submit

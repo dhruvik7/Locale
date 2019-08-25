@@ -13,8 +13,10 @@ interface LocationEntryStore {
   submitted: boolean;
   centroid: { latitude: number; longitude: number };
   zipCodes: string[];
+  valid_zipcodes: string[];
   datum: number[][];
   rankedData: number[][];
+  finalScores: number[];
 }
 
 const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
@@ -26,8 +28,10 @@ const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
   submitted: false,
   centroid: { latitude: 0, longitude: 0 },
   zipCodes: [],
+  valid_zipcodes: [],
   datum: [],
-  rankedData: []
+  rankedData: [],
+  finalScores: []
 });
 
 export default getStore;
