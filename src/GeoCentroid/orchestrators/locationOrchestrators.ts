@@ -1,26 +1,29 @@
 import { orchestrator } from "satcheljs";
 import getStore from "../store/store";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   submitAddresses,
   geocode,
   setCentroid,
   setZipCode,
   removeInvalidZipCode,
-  addData
+  addData,
+  formRankedMatrix
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
-import db from "../../../firebase";
-import { API_KEY, ZIPCODE_KEY } from "../../../api";
+import db from "../../firebase";
+import { API_KEY, ZIPCODE_KEY } from "../../api";
 
 async function driver() {
   await geocodeHelper();
   centroidHelper();
   await closestZipCode();
   await zipCodeList();
+  console.log("scoring");
   await addZipCodeData();
-  console.log(getStore().datum);
+  console.log("added");
+  // computeScores();
 }
 
 orchestrator(geocode, actionMessage => {
@@ -75,13 +78,21 @@ async function closestZipCode() {
 
 async function zipCodeList() {
   const centerZip = getStore().zipCodes[0];
-  const response = await axios.get(
-    "http://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius?zipcode=".concat(
-      centerZip,
-      "&maximumradius=15&minimumradius=0&key=",
-      ZIPCODE_KEY
-    )
-  );
+  var radius = 15;
+  let response: AxiosResponse;
+  do {
+    response = await axios.get(
+      "http://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius?zipcode=".concat(
+        centerZip,
+        "&maximumradius=",
+        radius.toString(),
+        "&minimumradius=0&key=",
+        ZIPCODE_KEY
+      )
+    );
+    radius--;
+  } while (response.data.DataList.length > 600);
+  console.log(radius);
   for (var index = 0; index < response.data.DataList.length; index++) {
     setZipCode(response.data.DataList[index].Code);
   }
@@ -92,18 +103,28 @@ function URLify(str: string) {
 }
 
 async function addZipCodeData() {
-  for (var i = 0; i < getStore().zipCodes.length - 1; i++) {
-    await db
-      .collection("zipcode_data")
-      .doc(getStore().zipCodes[i])
-      .get()
-      .then(doc => {
-        if (doc.data()) {
-          addData(doc.data());
-        } else {
-          removeInvalidZipCode(i);
-          i--;
-        }
-      });
-  }
+  // await db
+  //   .collection("tagged_zipcode_data")
+  //   .get()
+  //   .then(doc => {
+  //     console.log(doc);
+  //   });
+  await db
+    .collection("zipcode_data")
+    .get()
+    .then(snapshot => {
+      if (snapshot) {
+        snapshot.forEach(doc => {
+          if (getStore().zipCodes.includes(doc.id)) {
+            console.log(doc.data());
+            addData(doc.data());
+          }
+        });
+      }
+    });
+  console.log(getStore().datum);
+}
+
+function computeScores() {
+  formRankedMatrix();
 }

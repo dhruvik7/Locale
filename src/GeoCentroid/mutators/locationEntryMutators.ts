@@ -8,10 +8,10 @@ import {
   setCentroid,
   setZipCode,
   removeInvalidZipCode,
-  addData
+  addData,
+  formRankedMatrix
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
-// import { geocode } from "../services/geocoding";
 
 mutator(addNewAddress, () => {
   if (
@@ -65,9 +65,24 @@ mutator(removeInvalidZipCode, actionMessage => {
 });
 
 mutator(addData, actionMessage => {
-  getStore().datum.push(actionMessage.data);
-  console.log(Object.keys(actionMessage.data));
-  console.log(getRanking([12, 1.3, 4, 37, 98, 123.4]));
+  // const num: number[] = Object.values(actionMessage.data);
+  // getStore().datum.push(num.splice(num.length - 1, 1));
+  getStore().datum.push(Object.values(actionMessage.data));
+});
+
+mutator(formRankedMatrix, actionMessage => {
+  //setting the rows of rankedData to each category's rankings
+  const temp: number[][] = [];
+  for (var i = 0; i < getStore().datum[0].length; i++) {
+    //each "category" column
+    var raw_data = getStore().datum.map(function(value, index) {
+      return value[i];
+    });
+    temp.push(normalize(raw_data));
+  }
+  //making the rows into zipcodes again via transpose
+  getStore().rankedData = temp[0].map((col, i) => temp.map(row => row[i]));
+  console.log("done");
 });
 
 function getRanking(vals: number[]): number[] {
@@ -77,4 +92,22 @@ function getRanking(vals: number[]): number[] {
   return vals.map(function(val) {
     return sorted.indexOf(val) + 1;
   });
+}
+
+function normalize(vals: number[]): number[] {
+  var min = vals[0];
+  var max = vals[0];
+  for (var i = 0, len = vals.length; i < len; i++) {
+    if (vals[i] > max) {
+      max = vals[i];
+    }
+    if (vals[i] < min) {
+      min = vals[i];
+    }
+  }
+  const res: number[] = [];
+  for (var j = 0; j < len; j++) {
+    res.push((vals[j] - min) / (max - min));
+  }
+  return res;
 }

@@ -11,6 +11,7 @@ export let submitAddresses = action(
 );
 export let submit = action("submit");
 export let geocode = action("geocode");
+export let formRankedMatrix = action("formRankedMatrix");
 export let setCentroid = action("setCentroid", center => ({ center }));
 export let setZipCode = action("setZipCode", zipcode => ({ zipcode }));
 export let removeInvalidZipCode = action("removeInvalidZipCode", index => ({

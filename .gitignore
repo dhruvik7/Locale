@@ -13,8 +13,8 @@
 
 # misc
 /.firebase
-api.ts
-firebase.ts
+src/api.ts
+src/firebase.ts
 .DS_Store
 .env.local
 .env.development.local
