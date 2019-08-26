@@ -16,3 +16,5 @@ export let setCentroid = action("setCentroid", center => ({ center }));
 export let setZipCode = action("setZipCode", zipcode => ({ zipcode }));
 export let addData = action("addData", data => ({ data }));
 export let computeRanking = action("computeRanking");
+export let createRankingArray = action("createRankingArray");
+export let removeFirst = action("removeFirst");

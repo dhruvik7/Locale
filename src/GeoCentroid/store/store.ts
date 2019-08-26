@@ -4,6 +4,13 @@ interface Coordinate {
   lat: number;
   lng: number;
 }
+
+interface Result {
+  zip: string;
+  score: number;
+  rank: number;
+}
+
 interface LocationEntryStore {
   entries: number;
   currentEntry: string;
@@ -17,6 +24,7 @@ interface LocationEntryStore {
   datum: number[][];
   rankedData: number[][];
   finalScores: number[];
+  results: Result[];
 }
 
 const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
@@ -31,7 +39,8 @@ const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
   valid_zipcodes: [],
   datum: [],
   rankedData: [],
-  finalScores: []
+  finalScores: [],
+  results: []
 });
 
 export default getStore;

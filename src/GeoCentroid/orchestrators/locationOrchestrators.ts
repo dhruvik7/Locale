@@ -8,7 +8,9 @@ import {
   setZipCode,
   addData,
   formRankedMatrix,
-  computeRanking
+  computeRanking,
+  createRankingArray,
+  removeFirst
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
@@ -20,11 +22,13 @@ async function driver() {
   centroidHelper();
   await closestZipCode();
   await zipCodeList();
+  removeFirst();
   console.log("scoring");
   await addZipCodeData();
   console.log("added");
   formRankedMatrix();
   computeRanking();
+  createRankingArray();
 }
 
 orchestrator(geocode, actionMessage => {
@@ -83,7 +87,7 @@ async function zipCodeList() {
   let response: AxiosResponse;
   do {
     response = await axios.get(
-      "http://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius?zipcode=".concat(
+      "https://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius?zipcode=".concat(
         centerZip,
         "&maximumradius=",
         radius.toString(),

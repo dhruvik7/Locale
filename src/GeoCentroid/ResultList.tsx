@@ -3,11 +3,10 @@ import { observer } from "mobx-react";
 import getStore from "./store/store";
 import { geocode } from "./actions/locationEntryActions";
 import "./orchestrators/locationOrchestrators";
-
-interface Coordinate {
-  lat: number;
-  lng: number;
-}
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import "./preferenceStyles.css";
 
 @observer
 class ResultList extends React.Component<{}> {
@@ -16,16 +15,14 @@ class ResultList extends React.Component<{}> {
   }
 
   render() {
+    const content = getStore().results.map(res => (
+      <ListItem alignItems="center">
+        <ListItemText primary={res.rank.toString().concat(": ", res.zip)} />
+      </ListItem>
+    ));
     return (
-      <div>
-        <ul>
-          {getStore().valid_zipcodes.map(zip => (
-            <li>
-              {zip},{" "}
-              {getStore().finalScores[getStore().valid_zipcodes.indexOf(zip)]}
-            </li>
-          ))}
-        </ul>
+      <div className="list">
+        <List>{content}</List>
       </div>
     );
   }

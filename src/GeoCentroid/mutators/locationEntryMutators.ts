@@ -9,7 +9,9 @@ import {
   setZipCode,
   addData,
   formRankedMatrix,
-  computeRanking
+  computeRanking,
+  createRankingArray,
+  removeFirst
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
 import { getSliderState } from "../../Sliders/selectors/sliderSelectors";
@@ -61,6 +63,10 @@ mutator(setZipCode, actionMessage => {
   getStore().zipCodes.push(actionMessage.zipcode);
 });
 
+mutator(removeFirst, actionMessage => {
+  getStore().zipCodes.shift();
+});
+
 mutator(addData, actionMessage => {
   getStore().datum.push(Object.values(actionMessage.data.data()));
   getStore().valid_zipcodes.push(actionMessage.data.id);
@@ -79,7 +85,6 @@ mutator(formRankedMatrix, actionMessage => {
   //making the rows into zipcodes again via transpose
   getStore().rankedData = temp[0].map((col, i) => temp.map(row => row[i]));
   console.log("done");
-  console.log(getStore().rankedData);
 });
 
 function getRanking(vals: number[]): number[] {
@@ -113,7 +118,6 @@ mutator(computeRanking, actionMessage => {
   getStore().finalScores = getStore().rankedData.map(zip =>
     dotProduct(getSliderState(), zip)
   );
-  console.log(getStore().finalScores);
 });
 
 function dotProduct(arr1: number[], arr2: number[]) {
@@ -126,3 +130,20 @@ function dotProduct(arr1: number[], arr2: number[]) {
   }
   return sum;
 }
+
+mutator(createRankingArray, actionMessage => {
+  const len = getStore().finalScores.length;
+  const placements = getRanking(getStore().finalScores).map(function(x) {
+    return len - x + 1;
+  });
+  for (var i = 0; i < len; i++) {
+    getStore().results.push({
+      zip: getStore().valid_zipcodes[i],
+      score: getStore().finalScores[i],
+      rank: placements[i]
+    });
+  }
+  getStore().results = getStore().results.sort(function(a, b) {
+    return a.rank - b.rank;
+  });
+});

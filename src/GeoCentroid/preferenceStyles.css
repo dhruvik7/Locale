@@ -12,6 +12,11 @@
   overflow: auto;
 }
 
+.result {
+  justify-content: center;
+  align-items: center;
+}
+
 .listItem:hover {
   background: #cccccc;
 }
