@@ -12,6 +12,7 @@ interface Result {
 }
 
 interface LocationEntryStore {
+  startedSession: boolean;
   entries: number;
   currentEntry: string;
   text: string[];
@@ -25,9 +26,11 @@ interface LocationEntryStore {
   rankedData: number[][];
   finalScores: number[];
   results: Result[];
+  resultCoordinates: Coordinate[];
 }
 
 const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
+  startedSession: false,
   entries: 0,
   currentEntry: "",
   text: [],
@@ -40,7 +43,8 @@ const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
   datum: [],
   rankedData: [],
   finalScores: [],
-  results: []
+  results: [],
+  resultCoordinates: []
 });
 
 export default getStore;

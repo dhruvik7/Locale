@@ -30,7 +30,7 @@ class LocationList extends React.Component<{}> {
       </ListItem>
     ));
     return addresses.length > 0 ? (
-      <div className="list">
+      <div className="locationList">
         <List>{addressList}</List>
       </div>
     ) : null;

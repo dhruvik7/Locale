@@ -10,7 +10,9 @@ import {
   formRankedMatrix,
   computeRanking,
   createRankingArray,
-  removeFirst
+  removeFirst,
+  setLoaded,
+  addFinalCoordinate
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
@@ -19,16 +21,21 @@ import { API_KEY, ZIPCODE_KEY } from "../../api";
 
 async function driver() {
   await geocodeHelper();
-  centroidHelper();
-  await closestZipCode();
-  await zipCodeList();
-  removeFirst();
-  console.log("scoring");
-  await addZipCodeData();
-  console.log("added");
-  formRankedMatrix();
-  computeRanking();
-  createRankingArray();
+  if (getStore().coordinates.length > 0) {
+    centroidHelper();
+    await closestZipCode();
+    await zipCodeList();
+    // await testZip();
+    removeFirst();
+    console.log("scoring");
+    await addZipCodeData();
+    console.log("added");
+    formRankedMatrix();
+    computeRanking();
+    createRankingArray();
+    await getResultCoordinates();
+    setLoaded();
+  }
 }
 
 orchestrator(geocode, actionMessage => {
@@ -97,7 +104,6 @@ async function zipCodeList() {
     );
     radius--;
   } while (response.data.DataList.length > 600);
-  console.log(radius);
   for (var index = 0; index < response.data.DataList.length; index++) {
     setZipCode(response.data.DataList[index].Code);
   }
@@ -134,6 +140,21 @@ async function addZipCodeData() {
         });
     }
   }
+}
 
-  console.log(getStore().datum);
+async function getResultCoordinates() {
+  for (var i = 0, len = getStore().valid_zipcodes.length; i < len; i++) {
+    const response = await axios.get(
+      "https://maps.googleapis.com/maps/api/geocode/json?address=".concat(
+        getStore().results[i].zip,
+        API_KEY
+      )
+    );
+    if (response.data.results.length > 0) {
+      addFinalCoordinate(
+        response.data.results[0].geometry.location.lat,
+        response.data.results[0].geometry.location.lng
+      );
+    }
+  }
 }

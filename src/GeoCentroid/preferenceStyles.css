@@ -3,9 +3,10 @@
   justify-content: center;
   align-items: center;
   font-size: 30px;
+  width: 100%;
 }
 
-.list {
+.locationList {
   justify-content: center;
   align-items: center;
   max-height: 350px;

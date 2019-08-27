@@ -11,7 +11,9 @@ import {
   formRankedMatrix,
   computeRanking,
   createRankingArray,
-  removeFirst
+  removeFirst,
+  setLoaded,
+  addFinalCoordinate
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
 import { getSliderState } from "../../Sliders/selectors/sliderSelectors";
@@ -25,7 +27,6 @@ mutator(addNewAddress, () => {
     getStore().entries++;
     getStore().currentEntry = "";
   }
-  getStore().submitted = false;
 });
 
 mutator(maintainInput, actionMessage => {
@@ -35,7 +36,6 @@ mutator(maintainInput, actionMessage => {
 mutator(removeAddress, actionMessage => {
   getStore().text.splice(getStore().text.indexOf(actionMessage.address), 1);
   getStore().entries--;
-  getStore().submitted = false;
 });
 
 mutator(submitAddresses, actionMessage => {
@@ -50,9 +50,20 @@ mutator(submit, actionMessage => {
     getStore().submitted = true;
     getStore().coordinates = [];
     getStore().zipCodes = [];
+    getStore().valid_zipcodes = [];
+    getStore().datum = [];
+    getStore().rankedData = [];
+    getStore().finalScores = [];
+    getStore().results = [];
+    getStore().resultCoordinates = [];
+    getStore().startedSession = true;
   } else {
     alert("You must add at least one location to proceed with your search");
   }
+});
+
+mutator(setLoaded, actionMessage => {
+  getStore().submitted = false;
 });
 
 mutator(setCentroid, actionMessage => {
@@ -145,5 +156,12 @@ mutator(createRankingArray, actionMessage => {
   }
   getStore().results = getStore().results.sort(function(a, b) {
     return a.rank - b.rank;
+  });
+});
+
+mutator(addFinalCoordinate, actionMessage => {
+  getStore().resultCoordinates.push({
+    lat: actionMessage.lat,
+    lng: actionMessage.lng
   });
 });

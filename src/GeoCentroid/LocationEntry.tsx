@@ -17,12 +17,12 @@ class LocationEntry extends React.Component<{}> {
     const store = getStore();
     return (
       <div className="entryContainer">
+        <h1>locations</h1>
+        <h3>
+          List any addresses or places of significance to you (work,
+          friends/family, etc.)
+        </h3>
         <FormControl>
-          <InputLabel>Locations</InputLabel>
-          <FormHelperText id="location-helper">
-            List any addresses or places of significance to you (work,
-            friends/family, etc.)
-          </FormHelperText>
           <TextField
             name="address"
             placeholder="address"
@@ -30,6 +30,7 @@ class LocationEntry extends React.Component<{}> {
             onChange={maintainInput}
             id="location-input"
             aria-describedby="location-helper"
+            fullWidth
           />
 
           <div className="add">

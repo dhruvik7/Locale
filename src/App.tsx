@@ -7,14 +7,13 @@ import Container from "react-bootstrap/Container";
 import SchoolSlider from "./Sliders/SchoolSlider";
 import { scroller } from "react-scroll";
 import { submit } from "./GeoCentroid/actions/locationEntryActions";
-import ResultList from "./GeoCentroid/ResultList";
-import getStore from "./GeoCentroid/store/store";
 import HousingSlider from "./Sliders/HousingSlider";
 import EducationSlider from "./Sliders/EducationSlider";
 import WalkingSlider from "./Sliders/WalkingSlider";
 import UrbanSlider from "./Sliders/UrbanSlider";
 import TransitSlider from "./Sliders/TransitSlider";
 import FamilySlider from "./Sliders/FamilySlider";
+import ResultsContainer from "./GeoCentroid/ResultContainer";
 
 const App: React.FC = () => {
   return (
@@ -53,7 +52,7 @@ const App: React.FC = () => {
         <Fab type="submit" onClick={submit}>
           Submit
         </Fab>
-        {getStore().submitted ? <ResultList /> : null}
+        <ResultsContainer />
       </div>
     </div>
   );

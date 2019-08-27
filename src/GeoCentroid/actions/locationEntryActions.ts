@@ -18,3 +18,8 @@ export let addData = action("addData", data => ({ data }));
 export let computeRanking = action("computeRanking");
 export let createRankingArray = action("createRankingArray");
 export let removeFirst = action("removeFirst");
+export let setLoaded = action("setLoaded");
+export let addFinalCoordinate = action(
+  "addFinalCoordinate",
+  (lat: number, lng: number) => ({ lat, lng })
+);
