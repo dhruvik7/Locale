@@ -30,10 +30,16 @@ async function driver() {
     console.log("scoring");
     await addZipCodeData();
     console.log("added");
-    formRankedMatrix();
-    computeRanking();
-    createRankingArray();
-    await getResultCoordinates();
+    if (getStore().datum.length > 0) {
+      formRankedMatrix();
+      computeRanking();
+      createRankingArray();
+      await getResultCoordinates();
+    } else {
+      alert(
+        "It appears that your selected locations are not in the same region, please try again."
+      );
+    }
     setLoaded();
   }
 }

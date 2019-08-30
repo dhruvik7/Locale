@@ -42,6 +42,14 @@
   padding-bottom: 25px;
 }
 
+.resultContainer {
+  height: 100vh;
+}
+
+.sliderContainer {
+  padding-bottom: 50px;
+}
+
 .content {
   padding-top: 100px;
   font-family: Roboto;

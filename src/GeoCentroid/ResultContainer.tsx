@@ -10,7 +10,11 @@ import "./resultStyles.css";
 class ResultsContainer extends React.Component<{}> {
   render() {
     if (getStore().submitted) {
-      return <LoadingResults />;
+      return (
+        <div className="resultBox">
+          <LoadingResults />
+        </div>
+      );
     } else if (getStore().startedSession) {
       return (
         <div className="resultBox">

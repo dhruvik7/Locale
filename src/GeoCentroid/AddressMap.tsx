@@ -4,6 +4,8 @@ import getStore from "./store/store";
 import { GoogleMapProvider, Marker, MapBox } from "@googlemap-react/core";
 import { API_KEY } from "../api";
 
+var convert = require("color-convert");
+
 @observer
 class AddressMap extends React.Component {
   render() {
@@ -25,7 +27,7 @@ class AddressMap extends React.Component {
           draggable: false,
           title: getStore().results[i].zip,
           icon: {
-            url: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|".concat(
+            url: "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|".concat(
               getColor(i)
             )
           },
@@ -47,6 +49,18 @@ class AddressMap extends React.Component {
           style={{ height: "100vh", width: "100%" }}
           useVisualization
         />
+        <Marker
+          id="center"
+          opts={{
+            draggable: false,
+            title: "center",
+            position: {
+              lat: getStore().centroid.latitude,
+              lng: getStore().centroid.longitude
+            },
+            icon: "+"
+          }}
+        />
         {markers}
         {zips}
       </GoogleMapProvider>
@@ -54,14 +68,12 @@ class AddressMap extends React.Component {
   }
 }
 
-var convert = require("color-convert");
-
 function getColor(index: number): string {
-  const value =
-    (getStore().results.length - getStore().results[index].rank) /
-    getStore().results.length;
+  const hue =
+    ((getStore().results.length - getStore().results[index].rank) /
+      getStore().results.length) *
+    120;
   //value from 0 to 1
-  var hue = (value * 120).toString(10);
   return convert.hsl.hex(hue, 100, 50);
 }
 

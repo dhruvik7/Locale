@@ -23,9 +23,10 @@ const App: React.FC = () => {
         <div className="Sub-header">find your perfect neighborhood</div>
         <Fab
           variant="extended"
-          style={{ color: "#aaaaaa" }}
+          // style={{ color: "#aaaaaa" }}
+          color="secondary"
           size="large"
-          onClick={() => scrollTo()}
+          onClick={() => scrollTo("content")}
         >
           get started
         </Fab>
@@ -48,19 +49,26 @@ const App: React.FC = () => {
           <UrbanSlider />
           <TransitSlider />
           <FamilySlider />
+          <Fab
+            type="submit"
+            onClick={() => {
+              submit();
+              scrollTo("resultBox");
+            }}
+            color="secondary"
+          >
+            Submit
+          </Fab>
         </Container>
-        <Fab type="submit" onClick={submit}>
-          Submit
-        </Fab>
         <ResultsContainer />
       </div>
     </div>
   );
 };
 
-function scrollTo(): void {
+function scrollTo(loc: string): void {
   setTimeout(() => {
-    scroller.scrollTo("content", {
+    scroller.scrollTo(loc, {
       smooth: true,
       duration: 800
     });
