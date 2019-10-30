@@ -12,7 +12,8 @@ import {
   createRankingArray,
   removeFirst,
   setLoaded,
-  addFinalCoordinate
+  addFinalCoordinate,
+  setInvalidResponse
 } from "../actions/locationEntryActions";
 import "../mutators/locationEntryMutators";
 import { getCenter } from "geolib";
@@ -25,20 +26,22 @@ async function driver() {
     centroidHelper();
     await closestZipCode();
     await zipCodeList();
-    // await testZip();
-    removeFirst();
-    console.log("scoring");
-    await addZipCodeData();
-    console.log("added");
-    if (getStore().datum.length > 0) {
-      formRankedMatrix();
-      computeRanking();
-      createRankingArray();
-      await getResultCoordinates();
-    } else {
-      alert(
-        "It appears that your selected locations are not in the same region, please try again."
-      );
+    if (getStore().invalidResponse === false) {
+      // await testZip();
+      removeFirst();
+      console.log("scoring");
+      await addZipCodeData();
+      console.log("added");
+      if (getStore().datum.length > 0) {
+        formRankedMatrix();
+        computeRanking();
+        createRankingArray();
+        await getResultCoordinates();
+      } else {
+        alert(
+          "It appears that your selected locations are not in the same region, please try again."
+        );
+      }
     }
     setLoaded();
   }
@@ -85,16 +88,22 @@ async function closestZipCode() {
       API_KEY
     )
   );
-  const components = response.data.results[0].address_components;
-  for (var i in components) {
-    if (components[i].types[0] === "postal_code") {
-      setZipCode(components[i].short_name);
-      return;
+  if (response.data.results[0] !== undefined) {
+    const components = response.data.results[0].address_components;
+    for (var i in components) {
+      if (components[i].types[0] === "postal_code") {
+        setZipCode(components[i].short_name);
+        return;
+      }
     }
+  } else {
+    alert("This is not a valid location, please try again");
+    setInvalidResponse();
   }
 }
 
 async function zipCodeList() {
+  if (getStore().invalidResponse) return;
   const centerZip = getStore().zipCodes[0];
   var radius = 15;
   let response: AxiosResponse;
@@ -109,9 +118,19 @@ async function zipCodeList() {
       )
     );
     radius--;
-  } while (response.data.DataList.length > 600);
-  for (var index = 0; index < response.data.DataList.length; index++) {
-    setZipCode(response.data.DataList[index].Code);
+  } while (
+    response.data.DataList !== undefined &&
+    response.data.DataList.length > 600
+  );
+  if (response.data.DataList === undefined) {
+    alert(
+      "it appears you have attempted to search in a place that is mostly water! Unfortunately, these searches are not supported at this time. Please try again later."
+    );
+    setInvalidResponse();
+  } else {
+    for (var index = 0; index < response.data.DataList.length; index++) {
+      setZipCode(response.data.DataList[index].Code);
+    }
   }
 }
 

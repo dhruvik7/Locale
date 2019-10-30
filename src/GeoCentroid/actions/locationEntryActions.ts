@@ -23,3 +23,4 @@ export let addFinalCoordinate = action(
   "addFinalCoordinate",
   (lat: number, lng: number) => ({ lat, lng })
 );
+export let setInvalidResponse = action("setInvalidResponse");

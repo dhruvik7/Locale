@@ -13,7 +13,8 @@ import {
   createRankingArray,
   removeFirst,
   setLoaded,
-  addFinalCoordinate
+  addFinalCoordinate,
+  setInvalidResponse
 } from "../actions/locationEntryActions";
 import getStore from "../store/store";
 import { getSliderState } from "../../Sliders/selectors/sliderSelectors";
@@ -57,6 +58,7 @@ mutator(submit, actionMessage => {
     getStore().results = [];
     getStore().resultCoordinates = [];
     getStore().startedSession = true;
+    getStore().invalidResponse = false;
   } else {
     alert("You must add at least one location to proceed with your search");
   }
@@ -164,4 +166,10 @@ mutator(addFinalCoordinate, actionMessage => {
     lat: actionMessage.lat,
     lng: actionMessage.lng
   });
+});
+
+mutator(setInvalidResponse, actionMessage => {
+  getStore().invalidResponse = true;
+  getStore().submitted = false;
+  getStore().startedSession = false;
 });

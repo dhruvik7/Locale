@@ -27,6 +27,7 @@ interface LocationEntryStore {
   finalScores: number[];
   results: Result[];
   resultCoordinates: Coordinate[];
+  invalidResponse: boolean;
 }
 
 const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
@@ -44,7 +45,8 @@ const getStore = createStore<LocationEntryStore>("LocationEntryStore", {
   rankedData: [],
   finalScores: [],
   results: [],
-  resultCoordinates: []
+  resultCoordinates: [],
+  invalidResponse: false
 });
 
 export default getStore;
